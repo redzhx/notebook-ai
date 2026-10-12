@@ -117,6 +117,7 @@ const en: Record<string, string> = {
   'settings.vector.modelReady': 'Ready',
   'settings.vector.modelDownload': 'Download model',
   'settings.vector.modelDownloadFailed': 'Download failed',
+  'settings.vector.downloadFailHint': 'If the download fails (HuggingFace may be unreachable on your network), switch Embedding source to "External API" and pick a local provider such as 42model to avoid fetching models from overseas hosts.',
   'settings.vector.modelDownloading': 'Downloading…',
   'settings.vector.coverage': 'Vector coverage',
   'settings.vector.coverageNotEnabled': '— Not enabled',

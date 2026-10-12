@@ -24,6 +24,7 @@ export interface EmbeddingSectionProps {
 const PRESET_MODELS = [
   { id: 'Xenova/multilingual-e5-small', label: 'multilingual-e5-small (default, multilingual)' },
   { id: 'Xenova/all-MiniLM-L6-v2', label: 'all-MiniLM-L6-v2 (English)' },
+  { id: 'Xenova/bge-small-zh-v1.5', label: 'bge-small-zh-v1.5 (中文优先)' },
 ];
 
 export function EmbeddingSection({
@@ -153,6 +154,9 @@ export function EmbeddingSection({
                     <div>
                       <button onClick={onDownloadModel} style={{ marginRight: 8 }}>{t('common.retry')}</button>
                       <span style={{ color: 'var(--color-red)' }}>✗ {t('settings.vector.modelDownloadFailed')}</span>
+                      <div style={{ marginTop: 6, fontSize: '0.85em', color: 'var(--text-muted)' }}>
+                        {t('settings.vector.downloadFailHint')}
+                      </div>
                       {downloadError && (
                         <div style={{
                           marginTop: 6,

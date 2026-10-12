@@ -115,6 +115,7 @@ const zhCN: Record<string, string> = {
   'settings.vector.modelReady': '就绪',
   'settings.vector.modelDownload': '下载模型',
   'settings.vector.modelDownloadFailed': '下载失败',
+  'settings.vector.downloadFailHint': '若下载失败(国内网络可能无法访问 HuggingFace),建议把 Embedding 来源切换为「外部 API」并选择 42model 等本地/国产 provider,避免从海外源下载模型。',
   'settings.vector.modelDownloading': '下载中…',
   'settings.vector.coverage': '向量覆盖',
   'settings.vector.coverageNotEnabled': '— 未启用',

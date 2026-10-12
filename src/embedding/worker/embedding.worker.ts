@@ -91,8 +91,8 @@ function l2normalize(vec: number[]): number[] {
   return vec.map(v => v / norm);
 }
 
-self.addEventListener('message', async (evt: MessageEvent<EmbedRequest>) => {
-  const msg = evt.data;
+self.addEventListener('message', async (evt: MessageEvent) => {
+  const msg = evt.data as EmbedRequest;
 
   if (msg.type === 'init') {
     setupDiag(`init received: modelId=${msg.modelId} hasWasmBytes=${!!msg.wasmBytes}`);

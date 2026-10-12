@@ -180,7 +180,11 @@ export default class NotebookAIPlugin extends Plugin {
     const hashCache = new HashCacheStore(dataStore, paths);
     const pathMap = new PathMapStore(dataStore, paths);
     const cacheLoadStart = performance.now();
-    await Promise.all([hashCache.load(), pathMap.load()]);
+    try {
+      await Promise.all([hashCache.load(), pathMap.load()]);
+    } catch (e) {
+      logger.warn(`hashCache/pathMap load failed, continuing without cache: ${e instanceof Error ? e.message : e}`);
+    }
     const cacheLoadMs = Math.round(performance.now() - cacheLoadStart);
     logger.info(`hashCache + pathMap loaded in ${cacheLoadMs}ms`);
     stage('5. hashCache + pathMap');
@@ -211,7 +215,11 @@ export default class NotebookAIPlugin extends Plugin {
     // wasm bytes (19MB) 改为 lazy — 只在启用 local embedding 时才读取。
     // 之前每次启动都强制加载,空跑 1-3 秒 I/O,且占用 19MB 内存。
     this.embeddingRegistry = new EmbeddingClientRegistry();
-    this.embeddingWorkerBlobUrl = await this.buildEmbeddingWorkerBlobUrl();
+    try {
+      this.embeddingWorkerBlobUrl = await this.buildEmbeddingWorkerBlobUrl();
+    } catch (e) {
+      logger.warn(`buildEmbeddingWorkerBlobUrl failed (embedding.worker.js missing?): ${e instanceof Error ? e.message : e}`);
+    }
     stage('8.5a. embedding worker blob');
     const pluginDir = (this.app.vault.adapter as FileSystemAdapter).getBasePath()
       + '/' + this.manifest.dir + '/cache/transformers';
@@ -230,6 +238,11 @@ export default class NotebookAIPlugin extends Plugin {
           }));
         }
       } else if (cfg.source === 'local') {
+        if (!this.embeddingWorkerBlobUrl) {
+          this.embeddingDownloadState = 'error';
+          this.embeddingDownloadError = 'Embedding worker unavailable (embedding.worker.js missing). Switch Embedding source to External API or reinstall the plugin.';
+          return;
+        }
         const modelId = cfg.localModelId ?? 'Xenova/multilingual-e5-small';
         if (!this.embeddingWorkerHost) {
           this.embeddingWorkerHost = new EmbeddingWorkerHost({
